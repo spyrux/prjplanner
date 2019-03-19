@@ -20,6 +20,7 @@ public class PomoTodoApp extends Application {
     
     public static void main(String[] args) {
         launch(args);
+        JsonFileIO.write(tasks);
     }
     
     // EFFECTS: returns the primary Stage
@@ -55,6 +56,8 @@ public class PomoTodoApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         setPrimaryStage(primaryStage);
+        tasks = JsonFileIO.read();
         setScene(new ListView(tasks));
+
     }
 }

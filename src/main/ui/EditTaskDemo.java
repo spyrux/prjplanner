@@ -20,6 +20,7 @@ public class EditTaskDemo extends Application {
     
     public static void main(String[] args) {
         launch(args);
+
     }
     
     // REQUIRES: stage != null
