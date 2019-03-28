@@ -9,7 +9,7 @@ import parsers.exceptions.ParsingException;
 import java.util.*;
 
 // Represents a Task having a description, status, priorities, set of tags and due date.
-public class Task {
+public class Task extends Todo {
     public static final DueDate NO_DUE_DATE = null;
 
     private String description;
@@ -24,16 +24,14 @@ public class Task {
     //    If description does not contain meta-data, the task is set to have no due date,
     //    status of 'To Do', and default priority level (i.e., not important nor urgent)
     //  throws EmptyStringException if description is null or empty
+
     public Task(String description) {
-        if (description == null || description.length() == 0) {
-            throw new EmptyStringException("Cannot construct a task with no description");
-        }
-        this.description = description;
+
+        super(description);
         tags = new HashSet<>();
         dueDate = NO_DUE_DATE;
         priority = new Priority(4);
         status = Status.TODO;
-        setDescription(description);
     }
 
 
@@ -44,7 +42,7 @@ public class Task {
     public void addTag(String tagName) {
         addTag(new Tag(tagName));
     }
-    
+
     // MODIFIES: this
     // EFFECTS: adds tag to this task if it is not already exist
     //  throws NullArgumentException if tag is null
@@ -54,14 +52,14 @@ public class Task {
             tag.addTask(this);
         }
     }
-    
+
     // MODIFIES: this
     // EFFECTS: removes the tag with name tagName from this task
     //  throws EmptyStringException if tagName is empty or null
     public void removeTag(String tagName) {
         removeTag(new Tag(tagName));
     }
-    
+
     // MODIFIES: this
     // EFFECTS: removes tag from this task
     //  throws NullArgumentException if tag is null
@@ -71,7 +69,7 @@ public class Task {
             tag.removeTask(this);
         }
     }
-    
+
     // EFFECTS: returns an unmodifiable set of tags
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
@@ -112,6 +110,16 @@ public class Task {
         return description;
     }
 
+    @Override
+    public int getEstimatedTimeToComplete() {
+        return etcHours;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
+    }
+
     // MODIFIES: this
     // EFFECTS:  sets the description of this task
     //     parses the description to extract meta-data (i.e., tags, status, priority and deadline).
@@ -144,7 +152,7 @@ public class Task {
         }
         return containsTag(new Tag(tagName));
     }
-    
+
     // EFFECTS: returns true if task contains this tag,
     //     returns false otherwise
     //  throws NullArgumentException if tag is null
@@ -158,7 +166,7 @@ public class Task {
     // REQUIRES: description is non-empty
     // MODIFIES: this
     // EFFECTS: parses the description to extract meta-data (i.e., tags, status, priority and deadline).
-    private void parseDescription(String description) {
+    public void parseDescription(String description) {
         Parser parser = new TagParser();
         try {
             parser.parse(description, this);
@@ -188,12 +196,12 @@ public class Task {
         output.append("\n\tTags: " + tagsToString(new ArrayList<Tag>(getTags())));
         output.append("\n}");
         return output.toString();
-    
+
     }
 
     // EFFECTS: returns a string containing a comma-separated list of tags,
     //     where each tag is preceded by label "Tags: "
-    private String tagsToString(List<Tag> tags) {
+    public String tagsToString(List<Tag> tags) {
         StringBuffer output = new StringBuffer();
         for (int i = 0; i < tags.size() - 1; i++) {
             output.append(tags.get(i) + ", ");
@@ -205,7 +213,7 @@ public class Task {
         }
         return output.toString();
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -221,10 +229,33 @@ public class Task {
                 && Objects.equals(priority, task.priority)
                 && status == task.status;
     }
-    
+
     @Override
     public int hashCode() {
         // return Objects.hash(description, tags, dueDate, priority, status);
         return Objects.hash(description, dueDate, priority, status);
     }
+
+
+
+    // MODIFIES: this
+// EFFECTS: sets the progress made towards the completion of this task
+//  throws InvalidProgressException if !(0 <= progress <= 100)
+    public void setProgress(int progress) {
+        if (!(0 <= progress && progress <= 100)) {
+            //throw new InvalidProgressException();
+        }
+        this.progress = progress;
+    }
+
+    // MODIFIES: this
+// EFFECTS: sets the estimated time to complete this task (in hours of work)
+//  throws NegativeInputException if hours < 0
+    public void setEstimatedTimeToComplete(int hours) {
+        if (hours < 0) {
+            //throw new NegativeInputException();
+        }
+        this.etcHours = hours;
+    }
 }
+
