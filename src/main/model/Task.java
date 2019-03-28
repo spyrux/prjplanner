@@ -1,6 +1,8 @@
 package model;
 
 import model.exceptions.EmptyStringException;
+import model.exceptions.InvalidProgressException;
+import model.exceptions.NegativeInputException;
 import model.exceptions.NullArgumentException;
 import parsers.Parser;
 import parsers.TagParser;
@@ -12,7 +14,6 @@ import java.util.*;
 public class Task extends Todo {
     public static final DueDate NO_DUE_DATE = null;
 
-    private String description;
     private Set<Tag> tags;
     private DueDate dueDate;
     private Priority priority;
@@ -32,6 +33,7 @@ public class Task extends Todo {
         dueDate = NO_DUE_DATE;
         priority = new Priority(4);
         status = Status.TODO;
+        setDescription(description);
     }
 
 
@@ -106,9 +108,9 @@ public class Task extends Todo {
     }
 
     // EFFECTS: returns the description of this task
-    public String getDescription() {
-        return description;
-    }
+    //public String getDescription() {
+        //return description;
+   // }
 
     @Override
     public int getEstimatedTimeToComplete() {
@@ -243,7 +245,7 @@ public class Task extends Todo {
 //  throws InvalidProgressException if !(0 <= progress <= 100)
     public void setProgress(int progress) {
         if (!(0 <= progress && progress <= 100)) {
-            //throw new InvalidProgressException();
+            throw new InvalidProgressException();
         }
         this.progress = progress;
     }
@@ -253,7 +255,7 @@ public class Task extends Todo {
 //  throws NegativeInputException if hours < 0
     public void setEstimatedTimeToComplete(int hours) {
         if (hours < 0) {
-            //throw new NegativeInputException();
+            throw new NegativeInputException();
         }
         this.etcHours = hours;
     }

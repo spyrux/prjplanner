@@ -1,6 +1,8 @@
 package model;
 
 import model.exceptions.EmptyStringException;
+import model.exceptions.InvalidProgressException;
+import model.exceptions.NegativeInputException;
 import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +36,15 @@ class TaskTest {
     }
 
     @Test
+    public void testConstructor() {
+        b = new Task("cool");
+        try {
+            b = new Task("");
+        } catch (EmptyStringException n) {
+        }
+    }
+
+    @Test
     public void testProgressETC() {
         assertEquals(t.getProgress(),0);
         assertEquals(t.getEstimatedTimeToComplete(),0);
@@ -59,6 +70,7 @@ class TaskTest {
 
     @Test
     public void testAddNullTag(){
+        t.addTag("col");
         try {
             t.addTag((Tag)null);
             System.out.println("shouldnt run");
@@ -88,6 +100,26 @@ class TaskTest {
         }
 
     }
+    @Test
+    public void testNegHours(){
+        try {
+            t.setEstimatedTimeToComplete(-10);
+        }
+        catch (NegativeInputException n){
+
+        }
+    }
+    @Test
+    public void testBigProg(){
+        try {
+            t.setProgress(-10);
+        }
+        catch (InvalidProgressException n){
+
+        }
+    }
+
+
     @Test
     public void testNullStat() {
         try {
