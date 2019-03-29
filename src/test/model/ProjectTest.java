@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProjectTest {
 
+    Project b;
     Project p;
     Task t;
     Task o;
@@ -36,11 +37,33 @@ public class ProjectTest {
         p.add(o);
         k = new Task("eeee");
         p.add(k);
+        b = new Project("pog");
+    }
+
+    @Test
+    public void testForIterator() {
+        Task a = new Task("1");
+        Task e = new Task("2");
+        Task c = new Task("3");
+        Task d = new Task("4");
+        a.setPriority(new Priority(1));
+        e.setPriority(new Priority(2));
+        c.setPriority(new Priority(3));
+        d.setPriority(new Priority(4));
+        b.add(e);
+        b.add(a);
+        b.add(c);
+        b.add(d);
+
+        for (Todo t: b) {
+            System.out.println(t);
+        }
+
     }
 
     @Test
     public void TestForGetters(){
-        assertEquals(p.getNumberOfTasks(), 2);
+        assertEquals(p.getNumberOfTasks(), 3);
         assertEquals(p.getDescription(),"epic");
         p.remove(o);
         p.remove(t);
@@ -124,14 +147,14 @@ public class ProjectTest {
         p = new Project("cool");
         assertEquals(p.getEstimatedTimeToComplete(),0);
         assertEquals(p.getNumberOfTasks(),0);
-        p.add(t);
-        t.setProgress(100);
-        p.add(o);
+        k.setProgress(100);
         o.setProgress(50);
+        p.add(k);
+        p.add(o);
         assertEquals(75,p.getProgress());
         o.setEstimatedTimeToComplete(8);
         assertEquals(p.getEstimatedTimeToComplete(),8);
-        t.setEstimatedTimeToComplete(12);
+        k.setEstimatedTimeToComplete(12);
         assertEquals(p.getEstimatedTimeToComplete(),20);
 
     }

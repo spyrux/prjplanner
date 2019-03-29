@@ -1,11 +1,13 @@
 package model;
 
 import model.exceptions.EmptyStringException;
+import model.exceptions.NullArgumentException;
 
 public abstract class Todo {
     protected String description;
     protected int progress;
-    protected int etcHours;  // Estimated Time To Complete
+    protected int etcHours;
+    protected Priority priority;// Estimated Time To Complete
 
 
     // MODIFIES: this
@@ -16,6 +18,7 @@ public abstract class Todo {
         if (description == null || description.isEmpty()) {
             throw new EmptyStringException();
         }
+        this.priority = new Priority(4);
         this.description = description;
         this.progress = 0;
         this.etcHours = 0;
@@ -34,4 +37,16 @@ public abstract class Todo {
     // EFFECTS: returns an integer between 0 and 100 which represents
     //     the percentage of completion (rounded down to the closest integer).
     public abstract int getProgress();
+
+    public void setPriority(Priority priority) {
+        if (priority == null) {
+            throw new NullArgumentException("Illegal argument: priority is null");
+        }
+        this.priority = priority;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
 }

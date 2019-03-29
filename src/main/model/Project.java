@@ -3,20 +3,19 @@ package model;
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
 // Class Invariant: no duplicated task; order of tasks is preserved
-public class Project extends Todo {
+public class Project extends Todo implements Iterable<Todo> {
     private List<Todo> tasks;
-    
+
+
     // MODIFIES: this
     // EFFECTS: constructs a project with the given description
     //     the constructed project shall have no tasks.
     //  throws EmptyStringException if description is null or empty
+
     public Project(String description) {
         super(description);
         tasks = new ArrayList<>();
@@ -111,5 +110,49 @@ public class Project extends Todo {
     @Override
     public int hashCode() {
         return Objects.hash(description);
+    }
+
+    @Override
+    public Iterator<Todo> iterator() {
+        return new ProjectIterator();
+    }
+
+    private class ProjectIterator implements Iterator<Todo> {
+        Iterator p1Iterator = tasks.iterator();
+        Iterator p2Iterator = tasks.iterator();
+        Iterator p3Iterator = tasks.iterator();
+        Iterator p4Iterator = tasks.iterator();
+
+        @Override
+        public boolean hasNext() {
+            return p1Iterator.hasNext() || p2Iterator.hasNext() || p3Iterator.hasNext() || p4Iterator.hasNext();
+        }
+
+        @Override
+        public Todo next() {
+            Todo test;
+            if (p1Iterator.hasNext()) {
+                test = (Todo) p1Iterator.next();
+                if (test.getPriority().isUrgent() && test.getPriority().isImportant()) {
+                    return test;
+                }
+            } else if (p2Iterator.hasNext()) {
+                test = (Todo) p2Iterator.next();
+                if (!test.getPriority().isUrgent() && test.getPriority().isImportant()) {
+                    return test;
+                }
+            } else if (p3Iterator.hasNext()) {
+                test = (Todo) p3Iterator.next();
+                if (test.getPriority().isUrgent() && !test.getPriority().isImportant()) {
+                    return test;
+                }
+            } else if (p4Iterator.hasNext()) {
+                test = (Todo) p4Iterator.next();
+                if (!test.getPriority().isUrgent() && !test.getPriority().isImportant()) {
+                    return test;
+                }
+            }
+            return null;
+        }
     }
 }
