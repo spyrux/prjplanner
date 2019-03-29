@@ -130,29 +130,29 @@ public class Project extends Todo implements Iterable<Todo> {
 
         @Override
         public Todo next() {
+            Todo obj = null;
             Todo test;
             if (p1Iterator.hasNext()) {
                 test = (Todo) p1Iterator.next();
-                if (test.getPriority().isUrgent() && test.getPriority().isImportant()) {
-                    return test;
-                }
+                obj = getTodo(obj, test, test.getPriority().isUrgent(), test.getPriority().isImportant());
             } else if (p2Iterator.hasNext()) {
                 test = (Todo) p2Iterator.next();
-                if (!test.getPriority().isUrgent() && test.getPriority().isImportant()) {
-                    return test;
-                }
+                obj = getTodo(obj, test, !test.getPriority().isUrgent(), test.getPriority().isImportant());
             } else if (p3Iterator.hasNext()) {
                 test = (Todo) p3Iterator.next();
-                if (test.getPriority().isUrgent() && !test.getPriority().isImportant()) {
-                    return test;
-                }
+                obj = getTodo(obj, test, test.getPriority().isUrgent(), !test.getPriority().isImportant());
             } else if (p4Iterator.hasNext()) {
                 test = (Todo) p4Iterator.next();
-                if (!test.getPriority().isUrgent() && !test.getPriority().isImportant()) {
-                    return test;
-                }
+                obj = getTodo(obj, test, !test.getPriority().isUrgent(), !test.getPriority().isImportant());
             }
-            return null;
+            return obj;
+        }
+
+        private Todo getTodo(Todo obj, Todo test, boolean b, boolean b2) {
+            if (b && b2) {
+                obj = test;
+            }
+            return obj;
         }
     }
 }
