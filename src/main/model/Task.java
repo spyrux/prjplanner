@@ -213,6 +213,7 @@ public class Task extends Todo {
         } else {
             output.append(" ");
         }
+        
         return output.toString();
     }
 
